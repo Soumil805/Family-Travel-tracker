@@ -2,16 +2,18 @@ import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
 
+require("dotenv").config();
+
 const app = express();
 const port = 3000;
 
-const db = new pg.Client({
-  user: "postgres",
-  host: "localhost",
-  database: "world",
-  password: "Sou@#123",
-  port: 5432,
+const { Client } = require("pg");
+
+const db = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
 });
+
 db.connect();
 
 app.use(bodyParser.urlencoded({ extended: true }));
